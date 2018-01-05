@@ -1,11 +1,12 @@
 apply plugin: 'com.dd.comgradle'
+apply from: "../dependencies.gradle"
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion Integer.parseInt("${COMPILE_SDK_VERSION}")
+    buildToolsVersion "${BUILD_TOOLS_VERSION}"
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 14
+        minSdkVersion "${MIN_SDK_VERSION}"
+        targetSdkVersion "${TARGET_SDK_VERSION}"
         versionCode 1
         versionName "1.0"
 

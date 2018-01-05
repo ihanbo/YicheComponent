@@ -1,12 +1,15 @@
 apply plugin: 'com.dd.comgradle'
+apply from: "../dependencies.gradle"
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion Integer.parseInt("${COMPILE_SDK_VERSION}")
+    buildToolsVersion "${BUILD_TOOLS_VERSION}"
+
     defaultConfig {
-        applicationId "com.luojilab.androidcomponent"
-        minSdkVersion 15
-        targetSdkVersion 14
+        applicationId "com.yiche.autoeasy"
+        
+        minSdkVersion "${MIN_SDK_VERSION}"
+        targetSdkVersion "${TARGET_SDK_VERSION}"
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,7 +41,7 @@ dependencies {
 }
 
 combuild {
-    applicationName = 'com.luojilab.componentdemo.application.AppApplication'
+    applicationName = 'com.yiche.autoeasy.application.AppApplication'
     isRegisterCompoAuto = true
 }
 

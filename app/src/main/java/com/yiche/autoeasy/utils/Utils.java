@@ -1,4 +1,4 @@
-package com.luojilab.componentdemo.utils;
+package com.yiche.autoeasy.utils;
 
 import android.content.res.Resources;
 

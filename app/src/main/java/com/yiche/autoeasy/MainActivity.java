@@ -1,4 +1,4 @@
-package com.luojilab.componentdemo;
+package com.yiche.autoeasy;
 
 import android.content.Intent;
 import android.os.Bundle;
