@@ -7,11 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.luojilab.component.componentlib.router.ui.UIRouter;
-import com.luojilab.component.componentlib.service.JsonService;
-import com.luojilab.componentservice.share.bean.Author;
-
-
 /**
  * Created by mrzhang on 2017/6/15.
  */
@@ -34,21 +29,18 @@ public class ReaderFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    goToShareActivityWithBundle();
                 }
             });
             rootView.findViewById(R.id.tv_2).setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    goToShareActivityWithUri();
                 }
             });
             rootView.findViewById(R.id.tv_3).setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    goToShareActivityForResult();
                 }
             });
 
@@ -56,35 +48,5 @@ public class ReaderFragment extends Fragment {
         return rootView;
     }
 
-    // UI transfer with Bundle
-    private void goToShareActivityWithBundle() {
-        Author author = new Author();
-        author.setName("Margaret Mitchell");
-        author.setCounty("USA");
-        Bundle bundle = new Bundle();
-        bundle.putString("bookName", "Gone with the Wind");
-        bundle.putString("author", JsonService.Factory.getInstance().create().toJsonString(author));
-        UIRouter.getInstance().openUri(getActivity(), "DDComp://share/shareBook", bundle);
-    }
-
-    // UI transfer with URI
-    private void goToShareActivityWithUri() {
-        Author author = new Author();
-        author.setName("Barack Obama");
-        author.setCounty("New York");
-        UIRouter.getInstance().openUri(getActivity(),
-                "DDComp://kotlin/shareMagazine?bookName=NYTIME&author="
-                        + JsonService.Factory.getInstance().create().toJsonString(author), null);
-    }
-
-    //startActivityForResult
-    private void goToShareActivityForResult() {
-        Author author = new Author();
-        author.setName("Margaret Mitchell");
-        author.setCounty("USA");
-        UIRouter.getInstance().openUri(getActivity(),
-                "DDComp://share/shareBook?bookName=Gone with the Wind&author="
-                        + JsonService.Factory.getInstance().create().toJsonString(author), null, REQUEST_CODE);
-    }
 
 }

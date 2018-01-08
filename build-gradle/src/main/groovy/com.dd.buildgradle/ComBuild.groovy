@@ -49,16 +49,16 @@ public class ComBuild implements Plugin<Project> {
             if (!module.equals(mainmodulename)) {
                 project.android.sourceSets {
                     main {
-                        manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
-                        java.srcDirs = ['src/main/java', 'src/main/runalone/java']
-                        res.srcDirs = ['src/main/res', 'src/main/runalone/res']
+                        manifest.srcFile 'src/main/AndroidManifest.xml'
+                        java.srcDirs = ['src/main/java']
+                        res.srcDirs = ['src/main/res']
                     }
                 }
             }
             System.out.println("apply plugin is " + 'com.android.application');
             if (assembleTask.isAssemble && module.equals(compilemodule)) {
                 compileComponents(assembleTask, project)
-                project.android.registerTransform(new ComCodeTransform(project))
+                //project.android.registerTransform(new ComCodeTransform(project))
             }
         } else {
             project.apply plugin: 'com.android.library'

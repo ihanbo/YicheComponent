@@ -1,7 +1,11 @@
 package com.luojilab.share.applike;
 
-import com.luojilab.component.componentlib.applicationlike.IApplicationLike;
-import com.luojilab.component.componentlib.router.ui.UIRouter;
+
+import android.app.Application;
+import android.content.Context;
+import android.os.Bundle;
+
+import com.luojilab.componentservice.IApplicationLike;
 
 /**
  * Created by mrzhang on 2017/6/15.
@@ -9,15 +13,35 @@ import com.luojilab.component.componentlib.router.ui.UIRouter;
 
 public class ShareApplike implements IApplicationLike {
 
-    UIRouter uiRouter = UIRouter.getInstance();
+    private static ShareApplike mApp;
+    private Application mApplication;
 
     @Override
     public void onCreate() {
-        uiRouter.registerUI("share");
     }
 
     @Override
     public void onStop() {
-        uiRouter.unregisterUI("share");
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+
+    }
+
+    @Override
+    public Application getApplication() {
+        return mApplication;
+    }
+
+
+    public static ShareApplike getInstance() {
+        return mApp;
+    }
+
+    public static void onCreate(Context context) {
+        mApp = new ShareApplike();
+        mApp.mApplication = (Application) context;
+
     }
 }

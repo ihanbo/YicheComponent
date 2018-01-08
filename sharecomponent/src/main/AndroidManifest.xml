@@ -12,7 +12,11 @@
         <activity android:name="com.luojilab.share.ShareActivity">
 
         </activity>
-
+        <provider
+            android:authorities="${applicationId}.index"
+            android:exported="false"
+            android:multiprocess="true"
+            android:name=".applike.IndexProvider"/>
 
     </application>
 

@@ -15,11 +15,6 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [host: "share"]
-            }
-        }
 
     }
     buildTypes {
@@ -40,13 +35,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
-combuild {
-    applicationName = 'com.luojilab.share.runalone.application.ShareApplication'
-    isRegisterCompoAuto = true
-}
 repositories {
     mavenCentral()
 }

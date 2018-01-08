@@ -1,10 +1,9 @@
 package com.luojilab.reader.applike;
 
-import com.luojilab.component.componentlib.applicationlike.IApplicationLike;
-import com.luojilab.component.componentlib.router.Router;
-import com.luojilab.component.componentlib.router.ui.UIRouter;
-import com.luojilab.componentservice.readerbook.ReadBookService;
-import com.luojilab.reader.serviceimpl.ReadBookServiceImpl;
+import android.app.Application;
+import android.content.Context;
+
+import com.luojilab.componentservice.IApplicationLike;
 
 /**
  * Created by mrzhang on 2017/6/15.
@@ -12,18 +11,35 @@ import com.luojilab.reader.serviceimpl.ReadBookServiceImpl;
 
 public class ReaderAppLike implements IApplicationLike {
 
-    Router router = Router.getInstance();
-    UIRouter uiRouter = UIRouter.getInstance();
+    private static ReaderAppLike mApp;
+    private Application mApplication;
 
     @Override
     public void onCreate() {
-        uiRouter.registerUI("reader");
-        router.addService(ReadBookService.class.getSimpleName(), new ReadBookServiceImpl());
     }
 
     @Override
     public void onStop() {
-        uiRouter.unregisterUI("reader");
-        router.removeService(ReadBookService.class.getSimpleName());
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+
+    }
+
+    @Override
+    public Application getApplication() {
+        return mApplication;
+    }
+
+    public static ReaderAppLike getInstance(){
+        return mApp;
+    }
+
+
+    public static void onCreate(Context context) {
+        mApp = new ReaderAppLike();
+        mApp.mApplication = (Application) context;
+        mApp.onCreate();
     }
 }
