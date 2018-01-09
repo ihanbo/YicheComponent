@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">YCBaseLib</string>
+    <string name="title_activity_tx_record">TxRecordActivity</string>
+</resources>

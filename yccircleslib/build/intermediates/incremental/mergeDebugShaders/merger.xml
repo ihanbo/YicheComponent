@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/hanbo/workspace/yiche4Android/yccircleslib/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/hanbo/workspace/yiche4Android/yccircleslib/src/debug/shaders"/></dataSet></merger>
