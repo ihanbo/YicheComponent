@@ -1,8 +1,0 @@
-include ':app',
-        ':componentlib',
-        ':readercomponent',
-        ':sharecomponent',
-        ':componentservice',
-        ':build-gradle',
-        ':basiclib',
-        ':basicres'
