@@ -2,10 +2,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yiche.ycbaselib">
 
-    <application>
-        <activity
-            android:name=".thrid.tencent.video.record.RecordActivity"
-            android:label="@string/title_activity_tx_record"></activity>
-    </application>
-
+   
 </manifest>
