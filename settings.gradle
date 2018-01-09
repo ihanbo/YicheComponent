@@ -1,9 +1,6 @@
 include ':app',
-        ':componentlib',
-        ':readercomponent',
-        ':sharecomponent',
-        ':componentservice',
-        ':basiclib',
-        ':basicres',
-        ':router-annotation',
-        ':router-anno-compiler'
+        ':ycbaselib',
+        ':yccircleslib',
+        ':ycpublishlib'
+
+

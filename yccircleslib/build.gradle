@@ -43,5 +43,4 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':ycbaselib')
     testCompile 'junit:junit:4.12'
-    annotationProcessor ROUTE_ANNOTATION_COMPILER
 }

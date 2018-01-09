@@ -42,8 +42,4 @@ dependencies {
     compile 'com.android.support:design:22.2.1'
     testCompile 'junit:junit:4.12'
     // tencent 导入短视频SDK aar
-    compile 'com.tencent.ugc:lite-av-sdk-ugc:1.0.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile ROUTE_API
-    compile 'com.yiche.autoeasy.rxbus:rxbus:1.1'
 }

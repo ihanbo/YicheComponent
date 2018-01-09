@@ -33,5 +33,4 @@ dependencies {
     compile SUPPORT_APPCOMPAT_V7
     testCompile 'junit:junit:4.12'
     compile project(':ycbaselib')
-    annotationProcessor ROUTE_ANNOTATION_COMPILER
 }
