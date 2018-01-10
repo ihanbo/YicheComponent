@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.dd.comgradle2'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -33,4 +33,9 @@ dependencies {
     compile SUPPORT_APPCOMPAT_V7
     testCompile 'junit:junit:4.12'
     compile project(':ycbaselib')
+}
+
+combuild {
+    applicationName = 'com.yiche.ycpublishlib.PublishApplication'
+    isRegisterCompoAuto = true
 }

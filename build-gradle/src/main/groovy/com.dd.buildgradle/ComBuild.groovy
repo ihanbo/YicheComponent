@@ -1,6 +1,6 @@
 package com.dd.buildgradle
 
-import com.dd.buildgradle.exten.ComExtension
+import com.dd.buildgradle.exten.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -21,7 +21,7 @@ public class ComBuild implements Plugin<Project> {
 
         if (assembleTask.isAssemble) {
             fetchMainmodulename(project, assembleTask);
-            System.out.println("compilemodule  is " + compilemodule);
+            Say.say("compilemodule  is " + compilemodule);
         }
 
         if (!project.hasProperty("isRunAlone")) {

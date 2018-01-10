@@ -1,8 +1,26 @@
 package com.yiche.circles;
 
+import android.app.Application;
+import android.util.Log;
+
+import com.yiche.ycbaselib.component.IApplicationLike;
+import com.yiche.ycbaselib.service.ICirclesService;
+import com.yiche.ycbaselib.service.ServiceHost;
+
 /**
  * Created by hanbo on 2018/1/8.
  */
 
-public class CirclesAppLike {
+public class CirclesAppLike implements IApplicationLike {
+    @Override
+    public void onCreate(Application application) {
+        Log.i("yiche","车圈组件加载了，Application is :"+application.toString());
+        ServiceHost.addService(ICirclesService.class,CirclesService.getInstance());
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
 }

@@ -5,16 +5,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/circles_app_name"
-        android:supportsRtl="true"
-        tools:replace="android:label">
-        <activity android:name=".activities.IndexActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        android:label="@string/circles_app_name">
     </application>
 
 </manifest>

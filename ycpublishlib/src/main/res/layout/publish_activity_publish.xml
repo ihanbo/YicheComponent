@@ -5,19 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.yiche.circles.activities.IndexActivity">
+    tools:context="com.yiche.ycpublishlib.activities.PublishActivity">
+
 
 
     <TextView
-        android:id="@+id/circles_textview"
+        android:id="@+id/publish_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="车圈界面" />
+        android:text="发布界面" />
 
     <Button
         android:id="@+id/b1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发布条数" />
+        android:text="获取车圈条数" />
+
+    <Button
+        android:id="@+id/b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="是否加载车圈" />
+
 </LinearLayout>

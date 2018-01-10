@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.dd.comgradle2'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -43,4 +43,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':ycbaselib')
     testCompile 'junit:junit:4.12'
+}
+
+combuild {
+    applicationName = 'com.yiche.circles.CirclesApplication'
+    isRegisterCompoAuto = true
 }

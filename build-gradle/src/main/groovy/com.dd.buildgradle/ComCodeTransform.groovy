@@ -6,6 +6,7 @@ import javassist.*
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
+import com.dd.buildgradle.exten.*
 
 public class ComCodeTransform extends Transform {
 
@@ -41,10 +42,10 @@ public class ComCodeTransform extends Transform {
             }
         }
         for (CtClass ctClass : applications) {
-            System.out.println("application is   " + ctClass.getName());
+            Say.say("application is   " + ctClass.getName());
         }
         for (CtClass ctClass : activators) {
-            System.out.println("applicationlike is   " + ctClass.getName());
+            Say.say("applicationlike is   " + ctClass.getName());
         }
 
         transformInvocation.inputs.each { TransformInput input ->
@@ -54,6 +55,7 @@ public class ComCodeTransform extends Transform {
                 // 重命名输出文件（同目录copyFile会冲突）
                 def jarName = jarInput.name
                 def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
+                Say.say("jar name:"+jarName);
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
                 }
@@ -72,6 +74,7 @@ public class ComCodeTransform extends Transform {
                     File dir = new File(fileName)
                     dir.eachFileRecurse { File file ->
                         String filePath = file.absolutePath
+                        Say.say(" filePath:"+filePath);
                         String classNameTemp = filePath.replace(fileName, "")
                                 .replace("\\", ".")
                                 .replace("/", ".")
@@ -102,7 +105,7 @@ public class ComCodeTransform extends Transform {
 
 
     private void injectApplicationCode(CtClass ctClassApplication, List<CtClass> activators, String patch) {
-        System.out.println("injectApplicationCode begin");
+       Say.say("injectApplicationCode begin");
         ctClassApplication.defrost();
         try {
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("onCreate", null)
@@ -114,6 +117,7 @@ public class ComCodeTransform extends Transform {
             methodBody.
                     append(getAutoLoadComCode(activators));
             methodBody.append("}");
+            Say.say("method code : "+methodBody.toString());
             ctClassApplication.addMethod(CtMethod.make(methodBody.toString(), ctClassApplication));
         } catch (Exception e) {
 
@@ -121,15 +125,16 @@ public class ComCodeTransform extends Transform {
         ctClassApplication.writeFile(patch)
         ctClassApplication.detach()
 
-        System.out.println("injectApplicationCode success ");
+        Say.say("injectApplicationCode success ");
     }
 
     private String getAutoLoadComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder();
         for (CtClass ctClass : activators) {
-            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate();")
+            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this);")
         }
 
+        Say.say("autoLoadComCode : "+autoLoadComCode.toString());
         return autoLoadComCode.toString()
     }
 
@@ -148,7 +153,7 @@ public class ComCodeTransform extends Transform {
     private boolean isActivator(CtClass ctClass) {
         try {
             for (CtClass ctClassInter : ctClass.getInterfaces()) {
-                if ("com.luojilab.component.componentlib.applicationlike.IApplicationLike".equals(ctClassInter.name)) {
+                if ("com.yiche.ycbaselib.component.IApplicationLike".equals(ctClassInter.name)) {
                     return true;
                 }
             }
