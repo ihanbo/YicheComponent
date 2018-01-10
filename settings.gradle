@@ -1,6 +1,7 @@
 include ':app',
         ':ycbaselib',
 //        ':build-gradle',
+		':ycuserlib',
         ':yccircleslib',
         ':ycpublishlib'
 

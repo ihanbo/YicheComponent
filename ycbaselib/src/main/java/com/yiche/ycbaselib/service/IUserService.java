@@ -1,0 +1,12 @@
+package com.yiche.ycbaselib.service;
+
+/**
+ * 用户组件提供的服务
+ * Created by hanbo on 2018/1/10.
+ */
+
+public interface IUserService {
+
+
+    String getUserName();
+}

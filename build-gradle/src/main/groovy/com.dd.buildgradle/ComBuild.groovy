@@ -62,7 +62,7 @@ public class ComBuild implements Plugin<Project> {
             }
         } else {
             project.apply plugin: 'com.android.library'
-            System.out.println("apply plugin is " + 'com.android.library');
+            Say.say("apply plugin is " + 'com.android.library');
             project.afterEvaluate {
                 Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
                 if (assembleReleaseTask != null) {
@@ -150,7 +150,7 @@ public class ComBuild implements Plugin<Project> {
             return;
         }
         for (String str : compileComponents) {
-            System.out.println("comp is " + str);
+            Say.say("comp is " + str);
             if (str.contains(":")) {
                 File file = project.file("../componentrelease/" + str.split(":")[1] + "-release.aar")
                 if (file.exists()) {

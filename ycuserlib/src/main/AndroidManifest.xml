@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.yiche.user">
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/circles_app_name">
+    </application>
+
+
+    <provider
+        android:name=".IndexProvider"
+        android:authorities="com.yiche.user.indexprovider"
+        android:exported="false"
+        android:multiprocess="true" />
+
+</manifest>

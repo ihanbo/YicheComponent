@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.yiche.ycbaselib.service.ICirclesService;
+import com.yiche.ycbaselib.service.IUserService;
 import com.yiche.ycbaselib.service.ServiceHost;
 import com.yiche.ycpublishlib.R;
 
@@ -31,8 +32,8 @@ public class PublishActivity extends Activity {
         findViewById(R.id.b2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ICirclesService s = ServiceHost.getService(ICirclesService.class);
-                Toast.makeText(PublishActivity.this, s==null? "没有注册":"注册了", Toast.LENGTH_SHORT).show();
+                IUserService s = ServiceHost.getService(IUserService.class);
+                Toast.makeText(PublishActivity.this, s==null? "没有注册":"用户姓名："+s.getUserName(), Toast.LENGTH_SHORT).show();
             }
         });
     }

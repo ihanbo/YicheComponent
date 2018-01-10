@@ -55,7 +55,6 @@ public class ComCodeTransform extends Transform {
                 // 重命名输出文件（同目录copyFile会冲突）
                 def jarName = jarInput.name
                 def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
-                Say.say("jar name:"+jarName);
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
                 }
@@ -74,7 +73,7 @@ public class ComCodeTransform extends Transform {
                     File dir = new File(fileName)
                     dir.eachFileRecurse { File file ->
                         String filePath = file.absolutePath
-                        Say.say(" filePath:"+filePath);
+
                         String classNameTemp = filePath.replace(fileName, "")
                                 .replace("\\", ".")
                                 .replace("/", ".")

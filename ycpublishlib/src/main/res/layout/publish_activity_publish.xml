@@ -20,12 +20,12 @@
         android:id="@+id/b1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="获取车圈条数" />
+        android:text="车圈组件：条数" />
 
     <Button
         android:id="@+id/b2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="是否加载车圈" />
+        android:text="用户组件：姓名" />
 
 </LinearLayout>
