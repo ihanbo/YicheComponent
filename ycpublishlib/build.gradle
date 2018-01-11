@@ -35,7 +35,4 @@ dependencies {
     compile project(':ycbaselib')
 }
 
-combuild {
-    applicationName = 'com.yiche.ycpublishlib.PublishApplication'
-    isRegisterCompoAuto = true
-}
+

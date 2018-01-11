@@ -45,7 +45,3 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-combuild {
-    applicationName = 'com.yiche.circles.CirclesApplication'
-    isRegisterCompoAuto = true
-}

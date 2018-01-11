@@ -13,6 +13,7 @@ public class ComCodeTransform extends Transform {
     private Project project
     ClassPool classPool
     String applicationName;
+    String applikeName;
 
     ComCodeTransform(Project project) {
         this.project = project
@@ -21,6 +22,7 @@ public class ComCodeTransform extends Transform {
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         getRealApplicationName(transformInvocation.getInputs());
+        getAppLikeName(transformInvocation.getInputs());
         classPool = new ClassPool()
         project.android.bootClasspath.each {
             classPool.appendClassPath((String) it.absolutePath)
@@ -67,21 +69,19 @@ public class ComCodeTransform extends Transform {
             }
             //对类型为“文件夹”的input进行遍历
             input.directoryInputs.each { DirectoryInput directoryInput ->
-                boolean isRegisterCompoAuto = project.extensions.combuild.isRegisterCompoAuto
-                if (isRegisterCompoAuto) {
-                    String fileName = directoryInput.file.absolutePath
-                    File dir = new File(fileName)
-                    dir.eachFileRecurse { File file ->
-                        String filePath = file.absolutePath
+                String fileName = directoryInput.file.absolutePath
+                File dir = new File(fileName)
+                dir.eachFileRecurse { File file ->
+                    String filePath = file.absolutePath
 
-                        String classNameTemp = filePath.replace(fileName, "")
-                                .replace("\\", ".")
-                                .replace("/", ".")
-                        if (classNameTemp.endsWith(".class")) {
-                            String className = classNameTemp.substring(1, classNameTemp.length() - 6)
-                            if (className.equals(applicationName)) {
-                                injectApplicationCode(applications.get(0), activators, fileName);
-                            }
+                    String classNameTemp = filePath.replace(fileName, "")
+                            .replace("\\", ".")
+                            .replace("/", ".")
+                    if (classNameTemp.endsWith(".class")) {
+                        String className = classNameTemp.substring(1, classNameTemp.length() - 6)
+                        if (className.equals(applicationName)) {
+                            Say.say("Application filepath:"+filePath+" classNameTemp1-6:"+classNameTemp);
+                            injectApplicationCode(applications.get(0), activators, fileName);
                         }
                     }
                 }
@@ -96,9 +96,16 @@ public class ComCodeTransform extends Transform {
 
 
     private void getRealApplicationName(Collection<TransformInput> inputs) {
-        applicationName = project.extensions.combuild.applicationName
+        applicationName = project.properties.get("applicationName");
         if (applicationName == null || applicationName.isEmpty()) {
-            throw new RuntimeException("you should set applicationName in combuild")
+            throw new RuntimeException("you should set applicationName in rootproject's gradle.properties")
+        }
+    }
+
+    private void getAppLikeName(Collection<TransformInput> inputs) {
+        applikeName = project.rootProject.property("applikename");
+        if (applikeName == null || applikeName.isEmpty()) {
+            throw new RuntimeException("you should set applicationName in combuild gradle.properties")
         }
     }
 
@@ -152,7 +159,7 @@ public class ComCodeTransform extends Transform {
     private boolean isActivator(CtClass ctClass) {
         try {
             for (CtClass ctClassInter : ctClass.getInterfaces()) {
-                if ("com.yiche.ycbaselib.component.IApplicationLike".equals(ctClassInter.name)) {
+                if (applikeName.equals(ctClassInter.name)) {
                     return true;
                 }
             }

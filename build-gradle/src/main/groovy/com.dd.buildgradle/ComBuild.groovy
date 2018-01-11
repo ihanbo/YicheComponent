@@ -7,11 +7,21 @@ import org.gradle.api.Task
 
 public class ComBuild implements Plugin<Project> {
 
+    //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
     String compilemodule = "app"
 
     void apply(Project project) {
-        project.extensions.create('combuild', ComExtension)
+
+        if (!project.rootProject.hasProperty("applikename")||!project.rootProject.hasProperty("mainmodulename")) {
+            throw new RuntimeException("需要在根目录gradle.properties配置：applikename、mainmodulename！\n " +
+                    "you should set applikename、mainmodulename in rootproject's gradle.properties")
+        }
+
+        if (!project.hasProperty("isRunAlone")||!project.hasProperty("applicationName")) {
+            throw new RuntimeException("需要在" + module + "'s gradle.properties配置isRunAlone、applicationName" +
+                    "you should set isRunAlone、applicationName in " + module + "'s gradle.properties")
+        }
 
         String taskNames = project.gradle.startParameter.taskNames.toString()
         System.out.println("taskNames is " + taskNames);
@@ -24,9 +34,7 @@ public class ComBuild implements Plugin<Project> {
             Say.say("compilemodule  is " + compilemodule);
         }
 
-        if (!project.hasProperty("isRunAlone")) {
-            throw new RuntimeException("you should set isRunAlone in " + module + "'s gradle.properties")
-        }
+
 
         //对于isRunAlone==true的情况需要根据实际情况修改其值，
         // 但如果是false，则不用修改，该module作为一个lib，运行module:assembleRelease则发布aar到中央仓库
@@ -77,7 +85,7 @@ public class ComBuild implements Plugin<Project> {
                                 String fileName -> desFile.name
                             }
                         }
-                        System.out.println("$module-release.aar copy success ");
+                        Say.say("$module-release.aar copy success ");
                     }
                 }
             }
@@ -93,9 +101,7 @@ public class ComBuild implements Plugin<Project> {
      * @param assembleTask
      */
     private void fetchMainmodulename(Project project, AssembleTask assembleTask) {
-        if (!project.rootProject.hasProperty("mainmodulename")) {
-            throw new RuntimeException("you should set compilemodule in rootproject's gradle.properties")
-        }
+
         if (assembleTask.modules.size() > 0 && assembleTask.modules.get(0) != null
                 && assembleTask.modules.get(0).trim().length() > 0
                 && !assembleTask.modules.get(0).equals("all")) {
@@ -141,21 +147,22 @@ public class ComBuild implements Plugin<Project> {
         }
 
         if (components == null || components.length() == 0) {
-            System.out.println("there is no add dependencies ");
+            Say.say("there is no add dependencies ");
             return;
         }
         String[] compileComponents = components.split(",")
         if (compileComponents == null || compileComponents.length == 0) {
-            System.out.println("there is no add dependencies ");
+            Say.say("there is no add dependencies ");
             return;
         }
         for (String str : compileComponents) {
             Say.say("comp is " + str);
             if (str.contains(":")) {
                 File file = project.file("../componentrelease/" + str.split(":")[1] + "-release.aar")
+                 Say.say("aar filepath: :AbsolutePath:"+file.getAbsolutePath()+"\n path:"+file.getPath()+"\n CanonicalPath:"+file.getCanonicalPath());
                 if (file.exists()) {
                     project.dependencies.add("compile", str + "-release@aar")
-                    System.out.println("add dependencies : " + str + "-release@aar");
+                    Say.say("add dependencies : " + str + "-release@aar");
                 } else {
                     throw new RuntimeException(str + " not found ! maybe you should generate a new one ")
                 }
