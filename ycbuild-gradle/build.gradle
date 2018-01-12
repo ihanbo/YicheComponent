@@ -31,8 +31,8 @@ allprojects {
 }
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'baddog'
+    bintrayRepo = 'baddog'
+    bintrayName = 'bobofish'
 
     publishedGroupId = 'com.yiche.litecomponent'
     libraryName = 'lite component build'
