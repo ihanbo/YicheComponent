@@ -2,18 +2,22 @@
 参考得到的方案，做了部分修改
 # 一. 组件化我们要实现什么：
 1.各模块可以单独运行
-![Alt text](https://app.yinxiang.com/shard/s10/res/6c334cf1-4197-455a-8c63-99be835844f8)
+![image.png](http://upload-images.jianshu.io/upload_images/2288693-13040f7d10867275.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 2.任意模块联合调试：
-![Alt text](https://app.yinxiang.com/shard/s10/res/15cab063-0c98-4b8a-a0bd-8e0d5ea5228c)
+![image.png](http://upload-images.jianshu.io/upload_images/2288693-9f5a49b77047a43b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 3.代码隔离，看上图，不管单独运行还是联合调试，每个模块只引用一个一个项目：`ycbaselib`，在整个开发周期中都不`compile`其他模块，所以各个模块之间看不到其他模块的代码，各个模块交互通过**路由协议**及`ycbaselib`中的服务管理。
 
 4.采用此框架后，如下图所示每个模块可以单独运行，挂载其他模块只需要修改一行配置，而不需要手动管理依赖，
-![Alt text](https://app.yinxiang.com/shard/s10/res/53bf759d-4059-4526-bdd8-fccf0e569690)
+![image.png](http://upload-images.jianshu.io/upload_images/2288693-709a07e2ad1ff222.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 # 二.ycbaselib放什么
 1. 公共的第三方库，**注意：是所有模块都要用到的**，比如：网络框架、数据库、图片加载、Rxjava，所有业务相关的第三方库都放各自模块。
 2. 公共res资源：图片、颜色等
 3. **服务管理**，各个模块需要对外提供的服务会放此处：
-![Alt text](https://app.yinxiang.com/shard/s10/res/ade96c50-968a-4682-bce5-dad4105ca991)
+![image.png](http://upload-images.jianshu.io/upload_images/2288693-a49a60bb331ff661.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 此处只定义各个服务接口，具体的服务实现放在各个业务的模块下。
 ServiceHost为服务管理商，有两个方法：获取服务和注册服务。
 ```
@@ -94,7 +98,8 @@ apply plugin: 'com.yiche.litecomponent'//注意这里，不再是android.applica
 ```
 5.代码部分，在除主模块以外其他每个模块main目录下新建runalone目录：
 这个是单独运行时使用的,可以只放置一个AndroidManifest.xml，也可以放java目录和res目录用于存放代码和资源文件，如下如所示。在这里的AndroidManifest配置application以及启动Activity等，正式的AndroidManifest里不设置application以及启动ctivity。目录如下图所示：
-![Alt text](https://app.yinxiang.com/shard/s10/res/f4fdbb02-747a-4213-a8e3-c495e864127b)
+![image.png](http://upload-images.jianshu.io/upload_images/2288693-3b492de02edb5cfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 
 
 
@@ -114,7 +119,8 @@ apply plugin: 'com.yiche.litecomponent'//注意这里，不再是android.applica
 **debugComponent、compileComponent**：本模块debug依赖以及realease依赖。用于配置联合其他模块调试时的依赖，会在编译期间根据这个配置帮你引用其他项目。
 
 
-其他：ycuserblib提供了一个无侵入初始化的方案，通过ContentProvider来实现，原理参考[使用ContentProvider初始化你的Library](https://www.jianshu.com/p/5c0570263dfd)，可以不用在Application的onCreate里加代码来时现模块的初始化。
+# 其他：
+ycuserblib提供了一个无侵入初始化的方案，通过ContentProvider来实现，原理参考[使用ContentProvider初始化你的Library](https://www.jianshu.com/p/5c0570263dfd)，可以不用在Application的onCreate里加代码来时现模块的初始化。
 
 
 
