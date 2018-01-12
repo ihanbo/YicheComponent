@@ -30,11 +30,11 @@ public class ComBuild implements Plugin<Project> {
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
         stringBuilder.append("taskNames is: " + taskNames)
-        .append("\ncurrent module is: " + module)
+        .append("\n│  current module is: " + module)
 
         if (assembleTask.isAssemble) {
             fetchMainmodulename(project, assembleTask);
-            stringBuilder.append("\nlaunchmodule  is: " + compilemodule);
+            stringBuilder.append("\n│  launchmodule  is: " + compilemodule);
         }
 
         Say.say(stringBuilder.toString());
@@ -67,7 +67,7 @@ public class ComBuild implements Plugin<Project> {
                     }
                 }
             }
-            System.out.println("apply plugin is " + 'com.android.application');
+            Say.say("apply plugin is " + 'com.android.application');
             if (assembleTask.isAssemble && module.equals(compilemodule)) {
                 compileComponents(assembleTask, project)
                 project.android.registerTransform(new ComCodeTransform(project))
@@ -80,7 +80,7 @@ public class ComBuild implements Plugin<Project> {
                 if (assembleReleaseTask != null) {
                     assembleReleaseTask.doLast {
                         File infile = project.file("build/outputs/aar/$module-release.aar")
-                        File outfile = project.file("../componentrelease")
+                        File outfile = project.file("../release_aars")
                         File desFile = project.file("$module-release.aar");
                         project.copy {
                             from infile
@@ -162,8 +162,8 @@ public class ComBuild implements Plugin<Project> {
         for (String str : compileComponents) {
             Say.say("comp is " + str);
             if (str.contains(":")) {
-                File file = project.file("../componentrelease/" + str.split(":")[1] + "-release.aar")
-                 Say.say("aar filepath: :AbsolutePath:"+file.getAbsolutePath()+"\n path:"+file.getPath()+"\n CanonicalPath:"+file.getCanonicalPath());
+                File file = project.file("../release_aars/" + str.split(":")[1] + "-release.aar")
+                 Say.say("aar filepath: :AbsolutePath:"+file.getAbsolutePath());
                 if (file.exists()) {
                     project.dependencies.add("compile", str + "-release@aar")
                     Say.say("add dependencies : " + str + "-release@aar");
