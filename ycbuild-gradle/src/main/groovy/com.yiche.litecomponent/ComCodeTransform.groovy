@@ -1,4 +1,4 @@
-package com.dd.buildgradle
+package com.yiche.litecomponent
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
@@ -6,7 +6,7 @@ import javassist.*
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
-import com.dd.buildgradle.exten.*
+import com.yiche.litecomponent.exten.*
 
 public class ComCodeTransform extends Transform {
 

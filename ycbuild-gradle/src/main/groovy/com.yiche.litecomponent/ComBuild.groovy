@@ -1,6 +1,6 @@
-package com.dd.buildgradle
+package com.yiche.litecomponent
 
-import com.dd.buildgradle.exten.*
+import com.yiche.litecomponent.exten.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -23,17 +23,21 @@ public class ComBuild implements Plugin<Project> {
                     "you should set isRunAlone、applicationName in " + module + "'s gradle.properties")
         }
 
+        StringBuilder stringBuilder = new StringBuilder();
+
         String taskNames = project.gradle.startParameter.taskNames.toString()
-        System.out.println("taskNames is " + taskNames);
         String module = project.path.replace(":", "")
-        System.out.println("current module is " + module);
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
+
+        stringBuilder.append("taskNames is: " + taskNames)
+        .append("\ncurrent module is: " + module)
 
         if (assembleTask.isAssemble) {
             fetchMainmodulename(project, assembleTask);
-            Say.say("compilemodule  is " + compilemodule);
+            stringBuilder.append("\nlaunchmodule  is: " + compilemodule);
         }
 
+        Say.say(stringBuilder.toString());
 
 
         //对于isRunAlone==true的情况需要根据实际情况修改其值，

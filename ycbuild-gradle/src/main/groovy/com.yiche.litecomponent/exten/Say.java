@@ -1,4 +1,4 @@
-package com.dd.buildgradle.exten;
+package com.yiche.litecomponent.exten;
 
 /**
  * Created by hanbo on 2018/1/9.

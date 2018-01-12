@@ -1,4 +1,4 @@
-package com.dd.buildgradle
+package com.yiche.litecomponent
 
 import com.android.SdkConstants
 import com.android.build.api.transform.TransformInput
