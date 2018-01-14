@@ -32,14 +32,12 @@ public class ComBuild implements Plugin<Project> {
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
         stringBuilder.append("taskNames is: " + taskNames)
-        .append("\n│  current module is: " + module)
+        stringBuilder.append("\n│  current module is: " + module)
 
         if (assembleTask.isAssemble) {
             fetchMainmodulename(project, assembleTask);
             stringBuilder.append("\n│  launchmodule  is: " + compilemodule);
         }
-
-        Say.say(stringBuilder.toString());
 
 
         //对于isRunAlone==true的情况需要根据实际情况修改其值，
@@ -69,14 +67,15 @@ public class ComBuild implements Plugin<Project> {
                     }
                 }
             }
-            Say.say("apply plugin is " + 'com.android.application');
+            stringBuilder.append("\n│  "+"$module apply plugin is " + 'com.android.application');
             if (assembleTask.isAssemble && module.equals(compilemodule)) {
                 compileComponents(assembleTask, project)
                 project.android.registerTransform(new ComCodeTransform(project))
             }
+            Say.say(stringBuilder.toString());
         } else {
             project.apply plugin: 'com.android.library'
-            Say.say("apply plugin is " + 'com.android.library');
+            stringBuilder.append("\n│  "+"$module apply plugin is " + 'com.android.library');
             project.afterEvaluate {
                 Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
                 if (assembleReleaseTask != null) {
@@ -91,8 +90,12 @@ public class ComBuild implements Plugin<Project> {
                                 String fileName -> desFile.name
                             }
                         }
-                        Say.say("$module-release.aar copy success ");
+                        stringBuilder.append("│  "+"$module-release.aar copy success ");
+                        Say.say(stringBuilder.toString());
                     }
+                }else{
+                    stringBuilder.append("│  "+"no need copy aar");
+                    Say.say(stringBuilder.toString());
                 }
             }
         }
