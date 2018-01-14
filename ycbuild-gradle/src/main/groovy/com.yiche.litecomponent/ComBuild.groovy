@@ -76,6 +76,7 @@ public class ComBuild implements Plugin<Project> {
         } else {
             project.apply plugin: 'com.android.library'
             stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
+            Say.say(stringBuilder.toString());
             project.afterEvaluate {
                 Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
                 if (assembleReleaseTask != null) {
@@ -90,12 +91,10 @@ public class ComBuild implements Plugin<Project> {
                                 String fileName -> desFile.name
                             }
                         }
-                        stringBuilder.append("│  "+"$module-release.aar copy success ");
-                        Say.say(stringBuilder.toString());
+                        Say.say("$module-release.aar copy success ");
                     }
                 }else{
-                    stringBuilder.append("│  "+"no need copy aar");
-                    Say.say(stringBuilder.toString());
+                    Say.say("$module no need copy aar");
                 }
             }
         }
