@@ -11,7 +11,7 @@ public class ComBuild implements Plugin<Project> {
     //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
     String compilemodule = "app"
-
+    StringBuilder stringBuilder;
 
     void apply(Project project) {
 
@@ -25,7 +25,7 @@ public class ComBuild implements Plugin<Project> {
                     "you should set isRunAlone、applicationName in " + module + "'s gradle.properties")
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder = new StringBuilder();
 
         String taskNames = project.gradle.startParameter.taskNames.toString()
         String module = project.path.replace(":", "")
@@ -156,22 +156,22 @@ public class ComBuild implements Plugin<Project> {
         }
 
         if (components == null || components.length() == 0) {
-            Say.say("there is no add dependencies ");
+            stringBuilder.append("\n│  "+"there is no add dependencies ");
             return;
         }
         String[] compileComponents = components.split(",")
         if (compileComponents == null || compileComponents.length == 0) {
-            Say.say("there is no add dependencies ");
+            stringBuilder.append("\n│  "+"there is no add dependencies ");
             return;
         }
         for (String str : compileComponents) {
-            Say.say("comp is " + str);
+            stringBuilder.append("\n│  "+"compole: " + str);
             if (str.contains(":")) {
                 File file = project.file("../release_aars/" + str.split(":")[1] + "-release.aar")
-                 Say.say("aar filepath: :AbsolutePath:"+file.getAbsolutePath());
+                stringBuilder.append("\n│  "+"aar filepath: :AbsolutePath:"+file.getAbsolutePath());
                 if (file.exists()) {
                     project.dependencies.add("compile", str + "-release@aar")
-                    Say.say("add dependencies : " + str + "-release@aar");
+                    System.out.println("add dependencies : " + str + "-release@aar");
                 } else {
                     throw new RuntimeException(str + " not found ! maybe you should generate a new one ")
                 }
