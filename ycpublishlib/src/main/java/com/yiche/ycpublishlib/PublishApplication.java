@@ -7,4 +7,24 @@ import android.app.Application;
  */
 
 public class PublishApplication extends Application {
+
+    private static PublishApplication mApplication;
+
+    public static PublishApplication getInstance() {
+        return mApplication;
+    }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mApplication = this;
+    }
+
+    public void onTrimMemory2(int level) {
+    }
+
+    public void exitApp(){
+
+    }
 }

@@ -23,4 +23,14 @@ public class PublishAppLike implements IApplicationLike {
     public void onStop() {
 
     }
+
+    @Override
+    public void exitApp() {
+        Log.i("yiche","发布组件：exitApp:");
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        Log.i("yiche","发布组件：onTrimMemory，level is :"+level);
+    }
 }

@@ -10,6 +10,7 @@ import com.yiche.ycbaselib.service.ICirclesService;
 import com.yiche.ycbaselib.service.IUserService;
 import com.yiche.ycbaselib.service.ServiceHost;
 import com.yiche.ycpublishlib.BuildConfig;
+import com.yiche.ycpublishlib.PublishApplication;
 import com.yiche.ycpublishlib.R;
 
 public class PublishActivity extends Activity {
@@ -34,6 +35,8 @@ public class PublishActivity extends Activity {
             @Override
             public void onClick(View v) {
                 IUserService s = ServiceHost.getService(IUserService.class);
+                PublishApplication.getInstance().onTrimMemory2(333);
+                PublishApplication.getInstance().exitApp();
                 Toast.makeText(PublishActivity.this, s==null? "没有注册":"用户姓名："+s.getUserName(), Toast.LENGTH_SHORT).show();
             }
         });

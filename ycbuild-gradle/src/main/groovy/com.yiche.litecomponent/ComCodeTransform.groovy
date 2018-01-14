@@ -151,12 +151,31 @@ public class ComCodeTransform extends Transform {
 
         }
 
+        //插入onTrimMemory代码
+        try {
+//            CtClass[] paramTypes = {classPool.get(String.class.getName())};
+            CtClass[] paramTypes = new  CtClass[1];
+            paramTypes[0] = CtClass.intType;
+            CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("onTrimMemory", paramTypes)
+            attachBaseContextMethod.insertAfter(getOnTrimMemoryComCode(activators))
+        } catch (CannotCompileException | NotFoundException e) {
+            StringBuilder methodBody = new StringBuilder();
+            methodBody.append("public void onTrimMemory(int level) {");
+            methodBody.append("super.onTrimMemory(level);");
+            methodBody.
+                    append(getOnTrimMemoryComCode(activators));
+            methodBody.append("}");
+            ctClassApplication.addMethod(CtMethod.make(methodBody.toString(), ctClassApplication));
+        } catch (Exception e) {
+            Say.say("error "+e.toString());
+        }
+
         //插入exitApp代码
         try {
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("exitApp", null)
             attachBaseContextMethod.insertAfter(getExitAppComCode(activators))
         } catch (Exception e) {
-
+            Say.say(e.toString());
         }
         ctClassApplication.writeFile(patch)
         ctClassApplication.detach()
@@ -170,11 +189,21 @@ public class ComCodeTransform extends Transform {
         return autoLoadComCode.toString()
     }
 
+    private String getOnTrimMemoryComCode(List<CtClass> activators) {
+        StringBuilder autoLoadComCode = new StringBuilder();
+        for (CtClass ctClass : activators) {
+            autoLoadComCode.append("new " + ctClass.getName() + "().onTrimMemory(\$1);")
+        }
+        Say.say(autoLoadComCode.toString());
+        return autoLoadComCode.toString()
+    }
+
     private String getExitAppComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder();
         for (CtClass ctClass : activators) {
             autoLoadComCode.append("new " + ctClass.getName() + "()" + ".exitApp();")
         }
+        Say.say(autoLoadComCode.toString());
         return autoLoadComCode.toString()
     }
 
