@@ -35,7 +35,6 @@ public class PublishActivity extends Activity {
             @Override
             public void onClick(View v) {
                 IUserService s = ServiceHost.getService(IUserService.class);
-                PublishApplication.getInstance().onTrimMemory2(333);
                 PublishApplication.getInstance().exitApp();
                 Toast.makeText(PublishActivity.this, s==null? "没有注册":"用户姓名："+s.getUserName(), Toast.LENGTH_SHORT).show();
             }

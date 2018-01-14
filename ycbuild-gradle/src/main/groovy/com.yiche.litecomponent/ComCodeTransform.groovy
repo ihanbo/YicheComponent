@@ -167,7 +167,7 @@ public class ComCodeTransform extends Transform {
             methodBody.append("}");
             ctClassApplication.addMethod(CtMethod.make(methodBody.toString(), ctClassApplication));
         } catch (Exception e) {
-            Say.say("error "+e.toString());
+            Say.say("Exception: "+e.toString());
         }
 
         //插入exitApp代码
@@ -175,7 +175,7 @@ public class ComCodeTransform extends Transform {
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("exitApp", null)
             attachBaseContextMethod.insertAfter(getExitAppComCode(activators))
         } catch (Exception e) {
-            Say.say(e.toString());
+            Say.say("Exception: "+e.toString());
         }
         ctClassApplication.writeFile(patch)
         ctClassApplication.detach()
@@ -194,7 +194,6 @@ public class ComCodeTransform extends Transform {
         for (CtClass ctClass : activators) {
             autoLoadComCode.append("new " + ctClass.getName() + "().onTrimMemory(\$1);")
         }
-        Say.say(autoLoadComCode.toString());
         return autoLoadComCode.toString()
     }
 
@@ -203,7 +202,6 @@ public class ComCodeTransform extends Transform {
         for (CtClass ctClass : activators) {
             autoLoadComCode.append("new " + ctClass.getName() + "()" + ".exitApp();")
         }
-        Say.say(autoLoadComCode.toString());
         return autoLoadComCode.toString()
     }
 
