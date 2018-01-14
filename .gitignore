@@ -6,4 +6,5 @@
 build/
 /*/build/*
 /dd_repo/*
+/release_aars/*
 /captures
