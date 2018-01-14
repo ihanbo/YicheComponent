@@ -20,9 +20,6 @@ android {
                 arguments = ["moduleName": project.name]
             }
         }
-        sourceSets{
-            manifest( )
-        }
 
 //        packageBuildConfig(false)
 
