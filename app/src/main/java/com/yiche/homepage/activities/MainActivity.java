@@ -1,7 +1,6 @@
 package com.yiche.homepage.activities;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.yiche.homepage.R;
@@ -11,6 +10,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.app_activity_main);
     }
 }

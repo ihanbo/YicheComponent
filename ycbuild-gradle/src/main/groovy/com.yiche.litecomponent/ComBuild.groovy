@@ -7,9 +7,11 @@ import org.gradle.api.Task
 
 public class ComBuild implements Plugin<Project> {
 
+    static final String KEY_FOR_AAR = "publishaar";
     //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
     String compilemodule = "app"
+
 
     void apply(Project project) {
 

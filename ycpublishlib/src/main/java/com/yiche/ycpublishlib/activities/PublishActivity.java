@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.yiche.ycbaselib.service.ICirclesService;
 import com.yiche.ycbaselib.service.IUserService;
 import com.yiche.ycbaselib.service.ServiceHost;
+import com.yiche.ycpublishlib.BuildConfig;
 import com.yiche.ycpublishlib.R;
 
 public class PublishActivity extends Activity {
@@ -22,9 +23,9 @@ public class PublishActivity extends Activity {
             public void onClick(View v) {
                 ICirclesService s = ServiceHost.getService(ICirclesService.class);
                 if(s!=null){
-                    Toast.makeText(PublishActivity.this, "name::"+s.getCirclesName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishActivity.this, "name::"+s.getCirclesName()+" BuildConfig:"+ BuildConfig.DEBUG, Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(PublishActivity.this, "no service found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishActivity.this, "no service found"+" BuildConfig:"+ BuildConfig.DEBUG, Toast.LENGTH_SHORT).show();
                 }
             }
         });
