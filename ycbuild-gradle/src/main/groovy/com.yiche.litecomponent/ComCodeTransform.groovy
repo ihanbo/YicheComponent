@@ -14,6 +14,7 @@ public class ComCodeTransform extends Transform {
     ClassPool classPool
     String applicationName;
     String applikeName;
+    StringBuilder mStringBuilder;
 
     ComCodeTransform(Project project) {
         this.project = project
@@ -21,6 +22,7 @@ public class ComCodeTransform extends Transform {
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
+        mStringBuilder = new StringBuilder();
         getRealApplicationName(transformInvocation.getInputs());
         getAppLikeName(transformInvocation.getInputs());
         classPool = new ClassPool()
@@ -43,12 +45,28 @@ public class ComCodeTransform extends Transform {
                 activators.add(ctClass)
             }
         }
-        for (CtClass ctClass : applications) {
-            Say.say("application is   " + ctClass.getName());
+        mStringBuilder.append("\n│  "+"Config ApplicationName is: " + applicationName);
+        mStringBuilder.append("\n│  "+"Config AppLikeName is: " + applikeName);
+
+        mStringBuilder.append("\n│");
+        if(applications.isEmpty()){
+            mStringBuilder.append("\n│  "+"Not Found Application,You Must Set One");
+        }else{
+            for (CtClass ctClass : applications) {
+                mStringBuilder.append("\n│  "+"Found application is:  " + ctClass.getName());
+            }
         }
-        for (CtClass ctClass : activators) {
-            Say.say("applicationlike is   " + ctClass.getName());
+
+        mStringBuilder.append("\n│");
+        if(activators.isEmpty()){
+            mStringBuilder.append("\n│  "+"Not Found Any Applicationlike!!!");
+        }else{
+            for (CtClass ctClass : activators) {
+                mStringBuilder.append("\n│  "+"Found applicationlike is: " + ctClass.getName());
+            }
         }
+
+
 
         transformInvocation.inputs.each { TransformInput input ->
             //对类型为jar文件的input进行遍历
@@ -71,6 +89,7 @@ public class ComCodeTransform extends Transform {
             input.directoryInputs.each { DirectoryInput directoryInput ->
                 String fileName = directoryInput.file.absolutePath
                 File dir = new File(fileName)
+                String applicationFilePath  = "Oops not found Application have you set?";
                 dir.eachFileRecurse { File file ->
                     String filePath = file.absolutePath
 
@@ -80,11 +99,14 @@ public class ComCodeTransform extends Transform {
                     if (classNameTemp.endsWith(".class")) {
                         String className = classNameTemp.substring(1, classNameTemp.length() - 6)
                         if (className.equals(applicationName)) {
-                            Say.say("Application filepath:"+filePath+" classNameTemp1-6:"+classNameTemp);
+                            applicationFilePath= "Application filepath:"+filePath+" classNameTemp1-6:"+classNameTemp;
                             injectApplicationCode(applications.get(0), activators, fileName);
                         }
                     }
                 }
+                mStringBuilder.append("\n│");
+                mStringBuilder.append("\n│  "+applicationFilePath);
+                Say.say(mStringBuilder.toString());
                 def dest = transformInvocation.outputProvider.getContentLocation(directoryInput.name,
                         directoryInput.contentTypes,
                         directoryInput.scopes, Format.DIRECTORY)
@@ -111,36 +133,48 @@ public class ComCodeTransform extends Transform {
 
 
     private void injectApplicationCode(CtClass ctClassApplication, List<CtClass> activators, String patch) {
-       Say.say("injectApplicationCode begin");
         ctClassApplication.defrost();
+
+        //插入OnCreate代码
         try {
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("onCreate", null)
-            attachBaseContextMethod.insertAfter(getAutoLoadComCode(activators))
+            attachBaseContextMethod.insertAfter(getOnCreateComCode(activators))
         } catch (CannotCompileException | NotFoundException e) {
             StringBuilder methodBody = new StringBuilder();
             methodBody.append("protected void onCreate() {");
             methodBody.append("super.onCreate();");
             methodBody.
-                    append(getAutoLoadComCode(activators));
+                    append(getOnCreateComCode(activators));
             methodBody.append("}");
-            Say.say("method code : "+methodBody.toString());
             ctClassApplication.addMethod(CtMethod.make(methodBody.toString(), ctClassApplication));
+        } catch (Exception e) {
+
+        }
+
+        //插入exitApp代码
+        try {
+            CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("exitApp", null)
+            attachBaseContextMethod.insertAfter(getExitAppComCode(activators))
         } catch (Exception e) {
 
         }
         ctClassApplication.writeFile(patch)
         ctClassApplication.detach()
-
-        Say.say("injectApplicationCode success ");
     }
 
-    private String getAutoLoadComCode(List<CtClass> activators) {
+    private String getOnCreateComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder();
         for (CtClass ctClass : activators) {
             autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this);")
         }
+        return autoLoadComCode.toString()
+    }
 
-        Say.say("autoLoadComCode : "+autoLoadComCode.toString());
+    private String getExitAppComCode(List<CtClass> activators) {
+        StringBuilder autoLoadComCode = new StringBuilder();
+        for (CtClass ctClass : activators) {
+            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".exitApp();")
+        }
         return autoLoadComCode.toString()
     }
 

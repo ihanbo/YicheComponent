@@ -32,11 +32,11 @@ public class ComBuild implements Plugin<Project> {
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
         stringBuilder.append("taskNames is: " + taskNames)
-        stringBuilder.append("\n│  current module is: " + module)
+        stringBuilder.append("\n│  Current module is: " + module)
 
         if (assembleTask.isAssemble) {
             fetchMainmodulename(project, assembleTask);
-            stringBuilder.append("\n│  launchmodule  is: " + compilemodule);
+            stringBuilder.append("  Launch module  is: " + compilemodule);
         }
 
 
@@ -67,7 +67,7 @@ public class ComBuild implements Plugin<Project> {
                     }
                 }
             }
-            stringBuilder.append("\n│  "+"$module apply plugin is " + 'com.android.application');
+            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
             if (assembleTask.isAssemble && module.equals(compilemodule)) {
                 compileComponents(assembleTask, project)
                 project.android.registerTransform(new ComCodeTransform(project))
@@ -75,7 +75,7 @@ public class ComBuild implements Plugin<Project> {
             Say.say(stringBuilder.toString());
         } else {
             project.apply plugin: 'com.android.library'
-            stringBuilder.append("\n│  "+"$module apply plugin is " + 'com.android.library');
+            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
             project.afterEvaluate {
                 Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
                 if (assembleReleaseTask != null) {
@@ -165,7 +165,7 @@ public class ComBuild implements Plugin<Project> {
             return;
         }
         for (String str : compileComponents) {
-            stringBuilder.append("\n│  "+"compole: " + str);
+            stringBuilder.append("\n│  "+"compile: " + str);
             if (str.contains(":")) {
                 File file = project.file("../release_aars/" + str.split(":")[1] + "-release.aar")
                 stringBuilder.append("\n│  "+"aar filepath: :AbsolutePath:"+file.getAbsolutePath());
