@@ -3,13 +3,6 @@
 buildscript {
     repositories {
         jcenter()
-
-        maven {
-            url uri('./dd_repo')
-        }
-//        maven {
-//            url 'https://dl.bintray.com/ihanbo/baddog'
-//        }
         maven { url "https://jitpack.io" }
         maven {
             url 'https://maven.google.com/'
@@ -18,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'com.yiche.litecomponent:ycbuild-gradle:1.0.5'
+        classpath 'com.yiche.litecomponent:ycbuild-gradle:1.0.3'
         //jcenter
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
