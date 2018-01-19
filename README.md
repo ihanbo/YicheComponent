@@ -1,6 +1,8 @@
 ## 清量组件化方案一代目
-参考得到的方案，做了部分修改
-[项目地址](https://github.com/ihanbo/YicheComponent)
+参考得到的方案
+
+`ycbuild-gradle` 目录为写的gradle插件源码，想看的可以看看
+
 # 一. 组件化我们要实现什么：
 1.各模块可以单独运行
 ![image.png](http://upload-images.jianshu.io/upload_images/2288693-13040f7d10867275.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
