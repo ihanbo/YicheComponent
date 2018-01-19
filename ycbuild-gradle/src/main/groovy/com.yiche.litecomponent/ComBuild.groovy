@@ -28,12 +28,13 @@ public class ComBuild implements Plugin<Project> {
 
         stringBuilder = new StringBuilder("Task names：");
 
-        String taskNames = project.gradle.startParameter.taskNames.toString()
+        //当前的模块
         String module = project.path.replace(":", "")
+
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
-        for (String task : taskNames) {
-            stringBuilder.append("\n│  "+task);
+        for (String task : project.gradle.startParameter.taskNames) {
+            stringBuilder.append("\n│    "+task);
         }
         stringBuilder.append("\n│  ")
         stringBuilder.append("\n│  isDebug : " + assembleTask.isDebug)
