@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.yiche.circles.activities.IndexActivity">
+    android:orientation="vertical" >
 
 
     <TextView
@@ -13,7 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="车圈界面" />
+        android:text="用户界面" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp" />
 
     <Button
         android:id="@+id/b1"

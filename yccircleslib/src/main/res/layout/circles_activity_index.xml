@@ -15,9 +15,15 @@
         android:textSize="30sp"
         android:text="车圈界面" />
 
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
+
     <Button
         android:id="@+id/b1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发布条数" />
+        android:text="获取发布组件的发布条数" />
 </LinearLayout>

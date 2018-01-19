@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yiche.ycbaselib.service.ICirclesService;
@@ -19,6 +20,8 @@ public class PublishActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publish_activity_publish);
+        TextView textView = (TextView) findViewById(R.id.publish_textview);
+        textView.setText("发布界面 \n 已加载组件："+ServiceHost.getMountModules());
         findViewById(R.id.b1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

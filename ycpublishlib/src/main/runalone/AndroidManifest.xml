@@ -4,6 +4,7 @@ package="com.yiche.ycpublishlib">
 
 <application
     android:name=".PublishApplication"
+    android:theme="@android:style/Theme.Holo.Light"
     android:allowBackup="true">
 
     <activity android:name=".activities.PublishActivity">

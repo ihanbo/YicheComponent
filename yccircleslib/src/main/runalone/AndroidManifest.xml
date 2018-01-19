@@ -6,6 +6,7 @@
         android:allowBackup="true"
         android:label="@string/circles_app_name"
         android:supportsRtl="true"
+        android:theme="@android:style/Theme.Holo.Light"
         android:name=".CirclesApplication">
         <activity android:name=".activities.IndexActivity">
             <intent-filter>
