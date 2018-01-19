@@ -20,11 +20,6 @@ android {
                 arguments = ["moduleName": project.name]
             }
         }
-        sourceSets{
-            manifest( )
-        }
-
-
     }
 
     buildTypes {
