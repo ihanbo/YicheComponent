@@ -10,8 +10,6 @@ import android.app.Application;
 public interface IApplicationLike {
 
     void onCreate(Application application);
-
-    void onStop();
     void exitApp();
     void onTrimMemory(int level);
 }

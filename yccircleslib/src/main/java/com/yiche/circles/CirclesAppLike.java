@@ -20,11 +20,6 @@ public class CirclesAppLike implements IApplicationLike {
     }
 
     @Override
-    public void onStop() {
-
-    }
-
-    @Override
     public void exitApp() {
         Log.i("yiche","车圈组件：exitApp:");
     }

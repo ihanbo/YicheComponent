@@ -19,10 +19,6 @@ public class PublishAppLike implements IApplicationLike {
 
     }
 
-    @Override
-    public void onStop() {
-
-    }
 
     @Override
     public void exitApp() {
