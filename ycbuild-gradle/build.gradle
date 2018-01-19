@@ -43,7 +43,7 @@ ext {
     siteUrl = 'https://github.com/ihanbo/YicheComponent'
     gitUrl = 'https://github.com/ihanbo/YicheComponent.git'
 
-    libraryVersion = '1.0.3'
+    libraryVersion = '1.0.8'
 
     developerId = 'hanbo'
     developerName = 'Yiche'

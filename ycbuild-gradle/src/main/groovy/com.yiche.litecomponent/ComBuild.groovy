@@ -10,7 +10,8 @@ public class ComBuild implements Plugin<Project> {
     static final String KEY_FOR_AAR = "publishaar";
     //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
-    String compilemodule = "app"
+    String launchmodule = "app"
+    String mainmodulename
     StringBuilder stringBuilder;
 
     void apply(Project project) {
@@ -25,35 +26,45 @@ public class ComBuild implements Plugin<Project> {
                     "you should set isRunAlone、applicationName in " + module + "'s gradle.properties")
         }
 
-        stringBuilder = new StringBuilder();
+        stringBuilder = new StringBuilder("Task names：");
 
         String taskNames = project.gradle.startParameter.taskNames.toString()
         String module = project.path.replace(":", "")
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
-        stringBuilder.append("taskNames is: " + taskNames)
+        for (String task : taskNames) {
+            stringBuilder.append("\n│  "+task);
+        }
+        stringBuilder.append("\n│  ")
+        stringBuilder.append("\n│  isDebug : " + assembleTask.isDebug)
         stringBuilder.append("\n│  Current module is: " + module)
 
         if (assembleTask.isAssemble) {
-            fetchMainmodulename(project, assembleTask);
-            stringBuilder.append("  Launch module  is: " + compilemodule);
+            fetchLaunchModulename(project, assembleTask);
+            stringBuilder.append("  Launch module  is: " + launchmodule);
         }
 
 
         //对于isRunAlone==true的情况需要根据实际情况修改其值，
         // 但如果是false，则不用修改，该module作为一个lib，运行module:assembleRelease则发布aar到中央仓库
         boolean isRunAlone = Boolean.parseBoolean((project.properties.get("isRunAlone")))
-        String mainmodulename = project.rootProject.property("mainmodulename")
+        mainmodulename = project.rootProject.property("mainmodulename")
+
+
+        //设置主项目的isRunAlone永远为true,所以其他组件不能引用主项目 硬性规定
+        if (assembleTask.isAssemble&&module.equals(mainmodulename)) {
+            isRunAlone = true;
+            project.setProperty("isRunAlone", isRunAlone)
+        }
+
         if (isRunAlone && assembleTask.isAssemble) {
             //对于要编译的组件和主项目，isRunAlone修改为true，其他组件都强制修改为false
             //这就意味着组件不能引用主项目，这在层级结构里面也是这么规定的
-            if (module.equals(compilemodule) || module.equals(mainmodulename)) {
-                isRunAlone = true;
-            } else {
+            if (!module.equals(launchmodule) &&!module.equals(mainmodulename)) {
                 isRunAlone = false;
+                project.setProperty("isRunAlone", isRunAlone)
             }
         }
-        project.setProperty("isRunAlone", isRunAlone)
 
         //根据配置添加各种组件依赖，并且自动化生成组件加载代码
         if (isRunAlone) {
@@ -68,7 +79,7 @@ public class ComBuild implements Plugin<Project> {
                 }
             }
             stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
-            if (assembleTask.isAssemble && module.equals(compilemodule)) {
+            if (assembleTask.isAssemble && module.equals(launchmodule)) {
                 compileComponents(assembleTask, project)
                 project.android.registerTransform(new ComCodeTransform(project))
             }
@@ -77,7 +88,9 @@ public class ComBuild implements Plugin<Project> {
             project.apply plugin: 'com.android.library'
             stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
             Say.say(stringBuilder.toString());
+
             project.afterEvaluate {
+                //assembleRelease才会拷贝aar包
                 Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
                 if (assembleReleaseTask != null) {
                     assembleReleaseTask.doLast {
@@ -93,8 +106,6 @@ public class ComBuild implements Plugin<Project> {
                         }
                         Say.say("$module-release.aar copy success ");
                     }
-                }else{
-                    Say.say("$module no need copy aar");
                 }
             }
         }
@@ -108,17 +119,20 @@ public class ComBuild implements Plugin<Project> {
      * sharecomponent:assembleRelease :sharecomponent:assembleRelease ---sharecomponent
      * @param assembleTask
      */
-    private void fetchMainmodulename(Project project, AssembleTask assembleTask) {
+    private void fetchLaunchModulename(Project project, AssembleTask assembleTask) {
 
+        if(assembleTask.modules.size() > 0){
+            Say.say("FetchMainmodulename--size:"+assembleTask.modules.size()+" Task0: "+assembleTask.modules.get(0).toString());
+        }
         if (assembleTask.modules.size() > 0 && assembleTask.modules.get(0) != null
                 && assembleTask.modules.get(0).trim().length() > 0
                 && !assembleTask.modules.get(0).equals("all")) {
-            compilemodule = assembleTask.modules.get(0);
+            launchmodule = assembleTask.modules.get(0);
         } else {
-            compilemodule = project.rootProject.property("mainmodulename")
+            launchmodule = project.rootProject.property("mainmodulename")
         }
-        if (compilemodule == null || compilemodule.trim().length() <= 0) {
-            compilemodule = "app"
+        if (launchmodule == null || launchmodule.trim().length() <= 0) {
+            launchmodule = "app"
         }
     }
 
@@ -165,6 +179,9 @@ public class ComBuild implements Plugin<Project> {
         }
         for (String str : compileComponents) {
             stringBuilder.append("\n│  "+"compile: " + str);
+            if(str.contains(mainmodulename)){
+                throw new RuntimeException("can't compile mainmodule!!!");
+            }
             if (str.contains(":")) {
                 File file = project.file("../release_aars/" + str.split(":")[1] + "-release.aar")
                 stringBuilder.append("\n│  "+"aar filepath: :AbsolutePath:"+file.getAbsolutePath());
