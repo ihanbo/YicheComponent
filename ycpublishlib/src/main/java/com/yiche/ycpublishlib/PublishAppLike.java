@@ -2,6 +2,7 @@ package com.yiche.ycpublishlib;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yiche.ycbaselib.component.IApplicationLike;
 import com.yiche.ycbaselib.service.IPublishService;
@@ -13,8 +14,9 @@ import com.yiche.ycbaselib.service.ServiceHost;
 
 public class PublishAppLike implements IApplicationLike {
     @Override
-    public void onCreate(Application application) {
-        Log.i("yiche","发布组件加载了，Application is :"+application.toString());
+    public void onCreate(Application application,boolean debug) {
+        Toast.makeText(application, "  debug:"+debug, Toast.LENGTH_SHORT).show();
+        Log.i("yiche","发布组件加载了，Application is :"+application.toString()+"  debug:"+debug);
         ServiceHost.addService(IPublishService.class,PublishService.getInstance());
 
     }

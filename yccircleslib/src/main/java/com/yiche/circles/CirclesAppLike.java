@@ -13,8 +13,8 @@ import com.yiche.ycbaselib.service.ServiceHost;
 
 public class CirclesAppLike implements IApplicationLike {
     @Override
-    public void onCreate(Application application) {
-        Log.i("yiche","车圈组件加载了，Application is :"+application.toString());
+    public void onCreate(Application application,boolean debug) {
+        Log.i("yiche","车圈组件加载了，Application is :"+application.toString()+"  debug:"+debug);
         ServiceHost.addService(ICirclesService.class,CirclesService.getInstance());
 
     }

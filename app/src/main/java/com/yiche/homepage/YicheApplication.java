@@ -7,4 +7,6 @@ import android.app.Application;
  */
 
 public class YicheApplication extends Application {
+
+
 }

@@ -15,9 +15,11 @@ public class ComCodeTransform extends Transform {
     String applicationName;
     String applikeName;
     StringBuilder mStringBuilder;
+    boolean isDebugTask = false;    //标记是debug还是release
 
-    ComCodeTransform(Project project) {
+    ComCodeTransform(Project project,boolean isDebug) {
         this.project = project
+        isDebugTask = isDebug;
     }
 
     @Override
@@ -153,7 +155,7 @@ public class ComCodeTransform extends Transform {
 
         //插入onTrimMemory代码
         try {
-//            CtClass[] paramTypes = {classPool.get(String.class.getName())};
+            //CtClass[] paramTypes = {classPool.get(String.class.getName())};
             CtClass[] paramTypes = new  CtClass[1];
             paramTypes[0] = CtClass.intType;
             CtMethod attachBaseContextMethod = ctClassApplication.getDeclaredMethod("onTrimMemory", paramTypes)
@@ -184,7 +186,7 @@ public class ComCodeTransform extends Transform {
     private String getOnCreateComCode(List<CtClass> activators) {
         StringBuilder autoLoadComCode = new StringBuilder();
         for (CtClass ctClass : activators) {
-            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this);")
+            autoLoadComCode.append("new " + ctClass.getName() + "()" + ".onCreate(this,"+isDebugTask+");")
         }
         return autoLoadComCode.toString()
     }

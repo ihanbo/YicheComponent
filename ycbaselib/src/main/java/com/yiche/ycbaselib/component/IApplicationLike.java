@@ -9,7 +9,7 @@ import android.app.Application;
 
 public interface IApplicationLike {
 
-    void onCreate(Application application);
+    void onCreate(Application application,boolean debug);
     void exitApp();
     void onTrimMemory(int level);
 }

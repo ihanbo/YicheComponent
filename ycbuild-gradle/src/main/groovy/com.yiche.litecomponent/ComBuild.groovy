@@ -82,7 +82,7 @@ public class ComBuild implements Plugin<Project> {
             stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
             if (assembleTask.isAssemble && module.equals(launchmodule)) {
                 compileComponents(assembleTask, project)
-                project.android.registerTransform(new ComCodeTransform(project))
+                project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
             }
             Say.say(stringBuilder.toString());
         } else {
