@@ -157,16 +157,20 @@ public class ComBuild implements Plugin<Project> {
 
     /**
      * 自动添加依赖，只在运行assemble任务的才会添加依赖，因此在开发期间组件之间是完全感知不到的，这是做到完全隔离的关键
-     * 支持两种语法：module或者modulePackage:module,前者之间引用module工程，后者使用componentrelease中已经发布的aar
+     * 支持两种语法：module或者aar:module,前者之间引用module工程，后者使用componentrelease中已经发布的aar
+     * 例如：compile=ycpublishlib、compile=aar:ycpublishlib,ycuserlib
+     * 1.多个之间逗号隔开
+     * 2.debug下的依赖用debugComile关键字，release下的依赖用releaseCompile关键字
      * @param assembleTask
      * @param project
      */
     private void compileComponents(AssembleTask assembleTask, Project project) {
         String components;
+
         if (assembleTask.isDebug) {
-            components = (String) project.properties.get("debugComponent")
+            components = (String) project.properties.get("debugComile")
         } else {
-            components = (String) project.properties.get("compileComponent")
+            components = (String) project.properties.get("releaseCompile")
         }
 
         if (components == null || components.length() == 0) {
