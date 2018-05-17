@@ -40,6 +40,6 @@ dependencies {
     compile SUPPORT_APPCOMPAT_V7
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:22.2.1'
-    testCompile 'junit:junit:4.12'
+    provided 'com.squareup.retrofit2:converter-gson:2.4.0'
     // tencent 导入短视频SDK aar
 }
