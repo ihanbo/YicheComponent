@@ -8,11 +8,14 @@ import org.gradle.api.Task
 public class ComBuild implements Plugin<Project> {
 
     static final String KEY_FOR_AAR = "publishaar";
+    static final String TASK_PUB_AAR = "ycpubaar";
     //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
     String launchmodule = "app"
     String mainmodulename
     StringBuilder stringBuilder;
+
+
 
     void apply(Project project) {
 
@@ -21,7 +24,8 @@ public class ComBuild implements Plugin<Project> {
                     "you should set applikename、mainmodulename in rootproject's gradle.properties")
         }
 
-        if (!project.hasProperty("isRunAlone")||!project.hasProperty("applicationName")) {
+        //!project.hasProperty("isRunAlone")||
+        if (!project.hasProperty("applicationName")) {
             throw new RuntimeException("需要在" + module + "'s gradle.properties配置isRunAlone、applicationName" +
                     "you should set isRunAlone、applicationName in " + module + "'s gradle.properties")
         }
@@ -46,29 +50,68 @@ public class ComBuild implements Plugin<Project> {
         }
 
 
-        //对于isRunAlone==true的情况需要根据实际情况修改其值，
-        // 但如果是false，则不用修改，该module作为一个lib，运行module:assembleRelease则发布aar到中央仓库
-        boolean isRunAlone = Boolean.parseBoolean((project.properties.get("isRunAlone")))
         mainmodulename = project.rootProject.property("mainmodulename")
 
-
-        //设置主项目的isRunAlone永远为true,所以其他组件不能引用主项目 硬性规定
-        if (assembleTask.isAssemble&&module.equals(mainmodulename)) {
-            isRunAlone = true;
-            project.setProperty("isRunAlone", isRunAlone)
+        if(assembleTask.isPublishAAR&&launchmodule.equals(mainmodulename)){
+            throw new RuntimeException("main module can't publish aar!")
         }
 
-        if (isRunAlone && assembleTask.isAssemble) {
-            //对于要编译的组件和主项目，isRunAlone修改为true，其他组件都强制修改为false
-            //这就意味着组件不能引用主项目，这在层级结构里面也是这么规定的
+
+        //module  当前模块
+        //mainmodulename  主模块
+        //launchmodule 运行的模块
+        //assembleTask.isAssemble
+
+
+        //对于isLibrary==true该module作为一个lib，运行module:assembleRelease或者执行bundleRelease则发布aar到中央仓库
+        String pps = project.properties.get("isLibrary");
+        boolean isLibrary = pps!=null&&Boolean.parseBoolean(pps)==true
+
+        //主模块不能设为library
+        if(isLibrary&&module.equals(mainmodulename)){
+            throw new RuntimeException("main module can't set to be library!")
+        }
+
+
+
+        if (assembleTask.isAssemble) {
+            //对于编译任务，除了编译的模块，和主模块，其他模块isLibrary设为true
             if (!module.equals(launchmodule) &&!module.equals(mainmodulename)) {
-                isRunAlone = false;
-                project.setProperty("isRunAlone", isRunAlone)
+                isLibrary = true;
             }
         }
 
         //根据配置添加各种组件依赖，并且自动化生成组件加载代码
-        if (isRunAlone) {
+        if (isLibrary) {
+            project.apply plugin: 'com.android.library'
+            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
+            Say.say(stringBuilder.toString());
+            project.afterEvaluate {
+                //assembleRelease才会拷贝aar包
+                def copyaar = {
+                    File infile = project.file("build/outputs/aar/$module-release.aar")
+                    File outfile = project.file("../release_aars")
+                    File desFile = project.file("$module-release.aar");
+                    project.copy {
+                        from infile
+                        into outfile
+                        rename {
+                            String fileName -> desFile.name
+                        }
+                    }
+                    Say.say("$module-release.aar copy success ");
+                }
+                Task br = project.tasks.findByPath("bundleRelease")
+                Task assr = project.tasks.findByPath("assembleRelease")
+                if (br != null) {
+                    br.doLast(copyaar)
+                }
+
+                if(assr!=null){
+                    assr.doLast {copyaar}
+                }
+            }
+        } else {
             project.apply plugin: 'com.android.application'
             if (!module.equals(mainmodulename)) {
                 project.android.sourceSets {
@@ -85,31 +128,63 @@ public class ComBuild implements Plugin<Project> {
                 project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
             }
             Say.say(stringBuilder.toString());
-        } else {
-            project.apply plugin: 'com.android.library'
-            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
-            Say.say(stringBuilder.toString());
-
-            project.afterEvaluate {
-                //assembleRelease才会拷贝aar包
-                Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
-                if (assembleReleaseTask != null) {
-                    assembleReleaseTask.doLast {
-                        File infile = project.file("build/outputs/aar/$module-release.aar")
-                        File outfile = project.file("../release_aars")
-                        File desFile = project.file("$module-release.aar");
-                        project.copy {
-                            from infile
-                            into outfile
-                            rename {
-                                String fileName -> desFile.name
-                            }
-                        }
-                        Say.say("$module-release.aar copy success ");
-                    }
-                }
-            }
         }
+
+//
+//
+//
+//        if(assembleTask.isPublishAAR ){
+//            project.apply plugin: 'com.android.library'
+//            project.afterEvaluate {
+//                //assembleRelease才会拷贝aar包
+//                Task lastTask = project.tasks.findByPath("bundleRelease")
+//
+//                if (lastTask != null) {
+//                    lastTask.doLast {
+//                        File infile = project.file("build/outputs/aar/$module-release.aar")
+//                        File outfile = project.file("../release_aars")
+//                        File desFile = project.file("$module-release.aar");
+//                        project.copy {
+//                            from infile
+//                            into outfile
+//                            rename {
+//                                String fileName -> desFile.name
+//                            }
+//                        }
+//                        Say.say("$module-release.aar copy success ");
+//                    }
+//                }
+//
+//            }
+//        }else if (assembleTask.isAssemble) {
+//            if(module.equals(launchmodule)){
+//                project.apply plugin: 'com.android.application'
+//                if(!module.equals(mainmodulename)){
+//                    project.android.sourceSets {
+//                        main {
+//                            manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
+//                            java.srcDirs = ['src/main/java', 'src/main/runalone/java']
+//                            res.srcDirs = ['src/main/res', 'src/main/runalone/res']
+//                        }
+//                    }
+//                }
+//                compileComponents(assembleTask, project)
+//                project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
+//            }else{
+//                project.apply plugin: 'com.android.library'
+//            }
+//
+//        } else {
+//            project.apply plugin: 'com.android.application'
+////            project.tasks.create("ycaar",{
+////                project.exec {
+////                    executable = getAdbExe()
+////                    args 'install'
+////                    args '-r'
+////                    args getPackageFile()
+////                }
+////            })
+//        }
 
     }
 
@@ -140,6 +215,10 @@ public class ComBuild implements Plugin<Project> {
     private AssembleTask getTaskInfo(List<String> taskNames) {
         AssembleTask assembleTask = new AssembleTask();
         for (String task : taskNames) {
+            if(task.contains(TASK_PUB_AAR)){
+                assembleTask.isPublishAAR = true;
+                return;
+            }
             if (task.toUpperCase().contains("ASSEMBLE")
                     || task.contains("aR")
                     || task.toUpperCase().contains("RESGUARD")) {
@@ -185,7 +264,7 @@ public class ComBuild implements Plugin<Project> {
         for (String str : compileComponents) {
             stringBuilder.append("\n│  "+"compile: " + str);
             if(str.contains(mainmodulename)){
-                throw new RuntimeException("can't compile mainmodule!!!");
+                throw new RuntimeException("can't compile main module!!!");
             }
             if (str.contains(":")) {
                 File file = project.file("../release_aars/" + str.split(":")[1] + "-release.aar")
@@ -204,6 +283,7 @@ public class ComBuild implements Plugin<Project> {
     }
 
     private class AssembleTask {
+        boolean isPublishAAR = false;
         boolean isAssemble = false;
         boolean isDebug = false;
         List<String> modules = new ArrayList<>();
