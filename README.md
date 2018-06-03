@@ -13,7 +13,8 @@
 ![同步后，每个模块可以直接单独运行](http://upload-images.jianshu.io/upload_images/2288693-709a07e2ad1ff222.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/840)
 `SourceSet`处理：
 一个模块单独运行时和作为library相比肯定会有一些额外的代码和资源，以及不同的`AndroidManifest`文件，这部分单独放在`runalone`目录,当单独运行时会自动合并。
-![runalone目录](./1528014791967.png)
+![runalone目录](https://upload-images.jianshu.io/upload_images/2288693-90a7dbce51fe8485.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 
 
 #### 2. 依赖处理：
@@ -32,9 +33,8 @@ releaseCompile=aar:ycpublishlib,yccarlib
 
 ## 二.使用：
 #### 1. 插件使用：
-![根目录build.gradle里buildscript依赖](./1527842629539.png)
-
-![在组件的build.gradle里](./1527842437211.png)
+![根目录build.gradle里buildscript依赖](https://upload-images.jianshu.io/upload_images/2288693-1ab123172ad0bd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![在组件的build.gradle里](https://upload-images.jianshu.io/upload_images/2288693-b9f004568a302581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 #### 2.配置：
