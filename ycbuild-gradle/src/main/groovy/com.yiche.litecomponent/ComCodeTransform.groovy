@@ -24,6 +24,7 @@ public class ComCodeTransform extends Transform {
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
+        long startTime = System.currentTimeMillis();
         mStringBuilder = new StringBuilder();
         getRealApplicationName(transformInvocation.getInputs());
         getAppLikeName(transformInvocation.getInputs());
@@ -116,6 +117,8 @@ public class ComCodeTransform extends Transform {
                 FileUtils.copyDirectory(directoryInput.file, dest)
             }
         }
+        long cost = System.currentTimeMillis()-startTime;
+        Say.say("字节码插入耗时（ms）: "+cost);
     }
 
 
