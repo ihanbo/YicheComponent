@@ -76,3 +76,14 @@ uploadArchives {
     }
 }
 
+
+task A << {
+    println 'Hello from A'
+}
+task B {
+    doLast {
+        println 'Hello from B'
+    }
+}
+
+A.finalizedBy B
