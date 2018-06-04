@@ -10,6 +10,7 @@
 
 #### 1. 处理application还是libreay问题：
 每个模块默认都是`application`可以直接运行，其**依赖的模块则在编译期间自动替换成library**。
+
 ![同步后，每个模块可以直接单独运行](http://upload-images.jianshu.io/upload_images/2288693-709a07e2ad1ff222.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 `SourceSet`处理：
@@ -35,7 +36,9 @@ releaseCompile=aar:ycpublishlib,yccarlib
 ## 二.使用：
 #### 1. 插件使用：
 根目录build.gradle里buildscript依赖:
+
 ![根目录build.gradle里buildscript依赖](https://upload-images.jianshu.io/upload_images/2288693-1ab123172ad0bd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
+
 在组件的build.gradle里:
 ![在组件的build.gradle里](https://upload-images.jianshu.io/upload_images/2288693-b9f004568a302581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
