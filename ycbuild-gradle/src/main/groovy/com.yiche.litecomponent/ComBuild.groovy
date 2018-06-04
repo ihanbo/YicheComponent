@@ -8,7 +8,6 @@ import org.gradle.api.invocation.Gradle
 
 public class ComBuild implements Plugin<Project> {
 
-    static final String KEY_FOR_AAR = "publishaar";
     //当前编译的项目名
     //默认是app，直接运行assembleRelease的时候，等同于运行app:assembleRelease
     String launchmodule = "app"
@@ -17,7 +16,6 @@ public class ComBuild implements Plugin<Project> {
 
 
     void apply(Project project) {
-
 
 
 
@@ -36,6 +34,7 @@ public class ComBuild implements Plugin<Project> {
 
         //主模块名
         mainmodulename = project.rootProject.property("mainmodulename")
+
         //当前的模块
         String module = project.name;
 
@@ -44,12 +43,11 @@ public class ComBuild implements Plugin<Project> {
 
         AssembleTask assembleTask = getTaskInfo(taskNames)
 
+        //log用
         for (String task : taskNames) {
             stringBuilder.append("\n│    "+task);
         }
-        stringBuilder.append("\n│  ")
-        stringBuilder.append("\n│  isDebug : " + assembleTask.isDebug)
-        stringBuilder.append("\n│  Current module is: " + module)
+        stringBuilder.append("\n│  ").append("\n│  isDebug : " + assembleTask.isDebug).append("\n│  Current module is: " + module)
 
         if (assembleTask.isAssemble) {
             fetchLaunchModulename(project, assembleTask);
@@ -57,22 +55,7 @@ public class ComBuild implements Plugin<Project> {
         }
 
 
-        //module  当前模块
-        //mainmodulename  主模块
-        //launchmodule 运行的模块（右侧栏gradle直接执行assembletask 也当做app）
-        //assembleTask.isAssemble
-
-
-
-//        if (assembleTask.isAssemble) {
-//            //对于编译任务，除了编译的模块，和主模块，其他模块isLibrary设为true
-//            if (!module.equals(launchmodule) &&!module.equals(mainmodulename)) {
-//                isLibrary = true;
-//            }
-//        }
-
-
-        //apply application的调用
+        //定义一个apply application的调用
         def applyApp = {
             project.apply plugin: 'com.android.application'
             if (!module.equals(mainmodulename)) {
@@ -91,6 +74,11 @@ public class ComBuild implements Plugin<Project> {
             }
             Say.say(stringBuilder.toString());
         }
+
+        //module  当前模块
+        //mainmodulename  主模块
+        //launchmodule 运行的模块（右侧栏gradle直接执行assembletask 也当做app）
+        //assembleTask.isAssemble
 
         if(assembleTask.isAssemble){
             //发布任务
@@ -121,120 +109,12 @@ public class ComBuild implements Plugin<Project> {
                     if(assr!=null){
                         assr.doLast(copyaar)
                     }
-
                 }
             }
 
         }else{
             applyApp.call()
         }
-
-
-
-
-
-
-//        //根据配置添加各种组件依赖，并且自动化生成组件加载代码
-//        if (isLibrary) {
-//            project.apply plugin: 'com.android.library'
-//            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
-//            Say.say(stringBuilder.toString());
-//            project.afterEvaluate {
-//                //assembleRelease才会拷贝aar包
-//                def copyaar = {
-//                    File infile = project.file("build/outputs/aar/$module-release.aar")
-//                    File outfile = project.file("../release_aars")
-//                    File desFile = project.file("$module-release.aar");
-//                    project.copy {
-//                        from infile
-//                        into outfile
-//                        rename {
-//                            String fileName -> desFile.name
-//                        }
-//                    }
-//                    Say.say("$module-release.aar copy success ");
-//                }
-//                Task assr = project.tasks.findByPath("assembleRelease")
-//
-//                if(assr!=null){
-//                    assr.doLast {copyaar}
-//                }
-//            }
-//        } else {
-//            project.apply plugin: 'com.android.application'
-//            if (!module.equals(mainmodulename)) {
-//                project.android.sourceSets {
-//                    main {
-//                        manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
-//                        java.srcDirs = ['src/main/java', 'src/main/runalone/java']
-//                        res.srcDirs = ['src/main/res', 'src/main/runalone/res']
-//                    }
-//                }
-//            }
-//            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
-//            if (assembleTask.isAssemble && module.equals(launchmodule)) {
-//                compileComponents(assembleTask, project)
-//                project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
-//            }
-//            Say.say(stringBuilder.toString());
-//        }
-//
-////
-////
-////
-//        if(assembleTask.isPublishAAR ){
-//            project.apply plugin: 'com.android.library'
-//            project.afterEvaluate {
-//                //assembleRelease才会拷贝aar包
-//                Task lastTask = project.tasks.findByPath("bundleRelease")
-//
-//                if (lastTask != null) {
-//                    lastTask.doLast {
-//                        File infile = project.file("build/outputs/aar/$module-release.aar")
-//                        File outfile = project.file("../release_aars")
-//                        File desFile = project.file("$module-release.aar");
-//                        project.copy {
-//                            from infile
-//                            into outfile
-//                            rename {
-//                                String fileName -> desFile.name
-//                            }
-//                        }
-//                        Say.say("$module-release.aar copy success ");
-//                    }
-//                }
-//
-//            }
-//        }else if (assembleTask.isAssemble) {
-//            if(module.equals(launchmodule)){
-//                project.apply plugin: 'com.android.application'
-//                if(!module.equals(mainmodulename)){
-//                    project.android.sourceSets {
-//                        main {
-//                            manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
-//                            java.srcDirs = ['src/main/java', 'src/main/runalone/java']
-//                            res.srcDirs = ['src/main/res', 'src/main/runalone/res']
-//                        }
-//                    }
-//                }
-//                compileComponents(assembleTask, project)
-//                project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
-//            }else{
-//                project.apply plugin: 'com.android.library'
-//            }
-//
-//        } else {
-//            project.apply plugin: 'com.android.application'
-//            project.tasks.create("ycaar",{
-//                project.exec {
-//                    executable = getAdbExe()
-//                    args 'install'
-//                    args '-r'
-//                    args getPackageFile()
-//                }
-//            })
-//        }
-
     }
 
 
@@ -331,7 +211,6 @@ public class ComBuild implements Plugin<Project> {
     }
 
     private static class AssembleTask {
-        boolean isPublishAAR = false;
         boolean isAssemble = false;
         boolean isDebug = false;
         List<String> modules = new ArrayList<>();
