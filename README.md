@@ -10,10 +10,11 @@
 
 #### 1. 处理application还是libreay问题：
 每个模块默认都是`application`可以直接运行，其**依赖的模块则在编译期间自动替换成library**。
-![同步后，每个模块可以直接单独运行](http://upload-images.jianshu.io/upload_images/2288693-709a07e2ad1ff222.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/840)
+![同步后，每个模块可以直接单独运行](http://upload-images.jianshu.io/upload_images/2288693-709a07e2ad1ff222.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
+
 `SourceSet`处理：
 一个模块单独运行时和作为library相比肯定会有一些额外的代码和资源，以及不同的`AndroidManifest`文件，这部分单独放在`runalone`目录,当单独运行时会自动合并。
-![runalone目录](https://upload-images.jianshu.io/upload_images/2288693-90a7dbce51fe8485.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![runalone目录](https://upload-images.jianshu.io/upload_images/2288693-90a7dbce51fe8485.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 
 
@@ -33,8 +34,10 @@ releaseCompile=aar:ycpublishlib,yccarlib
 
 ## 二.使用：
 #### 1. 插件使用：
-![根目录build.gradle里buildscript依赖](https://upload-images.jianshu.io/upload_images/2288693-1ab123172ad0bd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-![在组件的build.gradle里](https://upload-images.jianshu.io/upload_images/2288693-b9f004568a302581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+根目录build.gradle里buildscript依赖:
+![根目录build.gradle里buildscript依赖](https://upload-images.jianshu.io/upload_images/2288693-1ab123172ad0bd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
+在组件的build.gradle里:
+![在组件的build.gradle里](https://upload-images.jianshu.io/upload_images/2288693-b9f004568a302581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 
 #### 2.配置：
@@ -46,7 +49,7 @@ applikename = com.yiche.ycbaselib.component.IApplicationLike    //IApplicationLi
 ```
 2.在每个模块下添加gradle.properties文件，然后添加如下配置：
 
-```
+```gradle
 isRunAlone=true
 applicationName = 'com.yiche.circles.CirclesApplication'  //该模块单独运行时Application全名
 debugCompile=ycpublishlib    //debug依赖
@@ -54,7 +57,7 @@ releaseCompile=ycpublishlib  //release依赖
 ```
 3.在项目根目录build.gradle里：
 
-```
+```gradle
 buildscript {
     repositories {
         //...略...
@@ -78,12 +81,12 @@ allprojects {
 
 4.在每个模块的build.gradle里：
 
-```
+```gradle
 apply plugin: 'com.yiche.litecomponent'//注意这里，不再是android.application或者library之类
 //...略...
 ```
 5.代码部分，**在除主模块以外其他每个模块main目录下新建runalone目录**，这个是单独运行时额外的代码和资源以及AndroidManifest,单独运行时会和main资源合并。
-![添加runalone目录](http://upload-images.jianshu.io/upload_images/2288693-3b492de02edb5cfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![添加runalone目录](http://upload-images.jianshu.io/upload_images/2288693-3b492de02edb5cfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 >备注：`AndroidManifest`不能合并，单独运行和作为library时各自用各自的
 
