@@ -40,13 +40,14 @@ releaseCompile=aar:ycpublishlib,yccarlib
 ![根目录build.gradle里buildscript依赖](https://upload-images.jianshu.io/upload_images/2288693-1ab123172ad0bd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 在组件的build.gradle里:
+
 ![在组件的build.gradle里](https://upload-images.jianshu.io/upload_images/2288693-b9f004568a302581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
 
 
 #### 2.配置：
 1.在项目根目录的gradle.properties里添加如下配置：
 
-```
+```gradle
 mainmodulename=app    //主项目是哪个module
 applikename = com.yiche.ycbaselib.component.IApplicationLike    //IApplicationLike接口全名
 ```
