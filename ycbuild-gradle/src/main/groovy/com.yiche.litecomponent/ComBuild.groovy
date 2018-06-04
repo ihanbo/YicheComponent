@@ -101,11 +101,7 @@ public class ComBuild implements Plugin<Project> {
                     }
                     Say.say("$module-release.aar copy success ");
                 }
-                Task br = project.tasks.findByPath("bundleRelease")
                 Task assr = project.tasks.findByPath("assembleRelease")
-                if (br != null) {
-                    br.doLast(copyaar)
-                }
 
                 if(assr!=null){
                     assr.doLast {copyaar}
