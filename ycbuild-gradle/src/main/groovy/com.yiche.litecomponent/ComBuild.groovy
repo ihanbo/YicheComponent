@@ -36,15 +36,13 @@ public class ComBuild implements Plugin<Project> {
         mainmodulename = project.rootProject.property("mainmodulename")
 
         //当前的模块
-        String module = project.name;
+        String module = project.path.replace(":", "")
 
         //任务名
-        List<String> taskNames = project.gradle.startParameter.taskNames
-
-        AssembleTask assembleTask = getTaskInfo(taskNames)
+        AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames)
 
         //log用
-        for (String task : taskNames) {
+        for (String task : project.gradle.startParameter.taskNames) {
             stringBuilder.append("\n│    "+task);
         }
         stringBuilder.append("\n│  ").append("\n│  isDebug : " + assembleTask.isDebug).append("\n│  Current module is: " + module)
@@ -54,26 +52,6 @@ public class ComBuild implements Plugin<Project> {
             stringBuilder.append("  Launch module  is: " + launchmodule);
         }
 
-
-        //定义一个apply application的调用
-        def applyApp = {
-            project.apply plugin: 'com.android.application'
-            if (!module.equals(mainmodulename)) {
-                project.android.sourceSets {
-                    main {
-                        manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
-                        java.srcDirs = ['src/main/java', 'src/main/runalone/java']
-                        res.srcDirs = ['src/main/res', 'src/main/runalone/res']
-                    }
-                }
-            }
-            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
-            if (module.equals(launchmodule)) {
-                compileComponents(assembleTask, project)
-                project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
-            }
-            Say.say(stringBuilder.toString());
-        }
 
         //module  当前模块
         //mainmodulename  主模块
@@ -85,7 +63,21 @@ public class ComBuild implements Plugin<Project> {
             boolean isApplication  = module.equals(launchmodule)||module.equals(mainmodulename)
             if(isApplication){
                 project.apply plugin: 'com.android.application'
-                applyApp.call()
+                if (!module.equals(mainmodulename)) {
+                    project.android.sourceSets {
+                        main {
+                            manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
+                            java.srcDirs = ['src/main/java', 'src/main/runalone/java']
+                            res.srcDirs = ['src/main/res', 'src/main/runalone/res']
+                        }
+                    }
+                }
+                stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
+                if (module.equals(launchmodule)) {
+                    compileComponents(assembleTask, project)
+                    project.android.registerTransform(new ComCodeTransform(project,assembleTask.isDebug))
+                }
+                Say.say(stringBuilder.toString());
             }else{
                 project.apply plugin: 'com.android.library'
                 stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.library');
@@ -113,7 +105,18 @@ public class ComBuild implements Plugin<Project> {
             }
 
         }else{
-            applyApp.call()
+            project.apply plugin: 'com.android.application'
+            if (!module.equals(mainmodulename)) {
+                project.android.sourceSets {
+                    main {
+                        manifest.srcFile 'src/main/runalone/AndroidManifest.xml'
+                        java.srcDirs = ['src/main/java', 'src/main/runalone/java']
+                        res.srcDirs = ['src/main/res', 'src/main/runalone/res']
+                    }
+                }
+            }
+            stringBuilder.append("\n│  "+"$module apply plugin: " + 'com.android.application');
+            Say.say(stringBuilder.toString());
         }
     }
 
@@ -175,7 +178,7 @@ public class ComBuild implements Plugin<Project> {
         String components;
 
         if (assembleTask.isDebug) {
-            components = (String) project.properties.get("debugComile")
+            components = (String) project.properties.get("debugCompile")
         } else {
             components = (String) project.properties.get("releaseCompile")
         }
